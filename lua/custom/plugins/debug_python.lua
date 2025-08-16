@@ -11,7 +11,32 @@ return {
       },
       config = function()
         local path = require('mason-registry').get_package('debugpy'):get_install_path()
-        require('dap-python').setup(path .. '/venv/bin/python')
+        if vim.loop.os_uname().sysname:find 'Windows' then
+          require('dap-python').setup(path .. '\\venv\\bin\\python')
+        else
+          require('dap-python').setup(path .. '/venv/bin/python', {
+            include_configs = false,
+          })
+        end
+
+        local venv_path = os.getenv 'VIRTUAL_ENV'
+        local pythonPath = path .. '/venv/bin/python'
+        if venv_path then
+          pythonPath = os.getenv 'VIRTUAL_ENV' .. '/bin/python'
+        end
+
+        local dap = require 'dap'
+        local configs = dap.configurations.python or {}
+        dap.configurations.python = configs
+        table.insert(configs, {
+          justMyCode = false,
+          type = 'python',
+          --request = 'executable',
+          request = 'launch',
+          name = 'VENV Debug',
+          program = '${file}',
+          pythonPath = pythonPath,
+        })
       end,
     },
   },
