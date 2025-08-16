@@ -19,11 +19,8 @@ return {
           })
         end
 
-        local venv_path = os.getenv 'VIRTUAL_ENV'
-        local pythonPath = path .. '/venv/bin/python'
-        if venv_path then
-          pythonPath = os.getenv 'VIRTUAL_ENV' .. '/bin/python'
-        end
+        local venv_path = os.getenv 'VIRTUAL_ENV' or os.getenv 'CONDA_PREFIX'
+        local pythonPath = venv_path and ((vim.fn.has 'win32' == 1 and venv_path .. '/Scripts/python') or venv_path .. '/bin/python')
 
         local dap = require 'dap'
         local configs = dap.configurations.python or {}
@@ -36,6 +33,7 @@ return {
           name = 'VENV Debug',
           program = '${file}',
           pythonPath = pythonPath,
+          console = 'integratedTerminal',
         })
       end,
     },
