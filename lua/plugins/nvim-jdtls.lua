@@ -1,3 +1,4 @@
+-- adapted from https://www.lazyvim.org/extras/lang/java
 return {
   'mfussenegger/nvim-jdtls',
   dependencies = {

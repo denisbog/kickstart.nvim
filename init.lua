@@ -5,6 +5,11 @@ vim.o.relativenumber = true
 vim.o.cursorline = true
 vim.o.scrolloff = 10
 
+vim.o.ignorecase = true
+vim.o.smartcase = true
+
+vim.o.inccommand = 'split'
+
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
