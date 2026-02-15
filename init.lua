@@ -25,3 +25,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+vim.opt.splitright = true
+vim.opt.splitbelow = true

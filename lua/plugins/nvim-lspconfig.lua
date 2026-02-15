@@ -34,11 +34,11 @@ return {
 
         -- Rename the variable under your cursor.
         --  Most Language Servers support renaming across files, etc.
-        map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+        map('<leader>cr', vim.lsp.buf.rename, '[R]ename')
 
         -- Execute a code action, usually your cursor needs to be on top of an error
         -- or a suggestion from your LSP for this to activate.
-        map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+        map('<leader>ca', vim.lsp.buf.code_action, 'Goto Code [A]ction', { 'n', 'x' })
 
         -- -- Find references for the word under your cursor.
         -- map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -54,7 +54,7 @@ return {
 
         -- WARN: This is not Goto Definition, this is Goto Declaration.
         --  For example, in C this would take you to the header.
-        map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+        map('<leader>D', vim.lsp.buf.declaration, 'Goto [D]eclaration')
 
         -- -- Fuzzy find all the symbols in your current document.
         -- --  Symbols are things like variables, functions, types, etc.
