@@ -1,6 +1,9 @@
 return { -- Adds git related signs to the gutter, as well as utilities for managing changes
   'lewis6991/gitsigns.nvim',
   opts = {
+    diff_opts = {
+      ignore_whitespace = true,
+    },
     signs = {
       add = { text = '┃' },
       change = { text = '┃' },
