@@ -54,6 +54,25 @@ return { -- Adds git related signs to the gutter, as well as utilities for manag
     on_attach = function(bufnr)
       local gitsigns = require 'gitsigns'
 
+      local function gitsigns_ignore_ws()
+        local v = require('gitsigns.config').config.diff_opts.ignore_whitespace
+        return v == nil and true or v
+      end
+
+      vim.api.nvim_create_user_command('GitsignsToggleIgnoreWhitespace', function()
+        local nextv = not gitsigns_ignore_ws()
+        vim.g.gitsigns_ignore_whitespace = nextv
+
+        require('gitsigns').setup {
+          diff_opts = {
+            ignore_whitespace = nextv,
+          },
+        }
+        require('gitsigns').refresh()
+
+        vim.notify('gitsigns ignore_whitespace = ' .. tostring(nextv))
+      end, {})
+
       local function map(description, mode, l, r, opts)
         opts = opts or { desc = description }
         opts.buffer = bufnr
@@ -115,6 +134,10 @@ return { -- Adds git related signs to the gutter, as well as utilities for manag
 
       -- Text object
       map('Select Hunk', { 'o', 'x' }, 'ih', gitsigns.select_hunk)
+
+      map('Toogle whitespace', 'n', '<leader>tws', '<cmd>GitsignsToggleIgnoreWhitespace<CR>', {
+        desc = 'Toggle gitsigns ignore whitespace',
+      })
     end,
   },
 }
