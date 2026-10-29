@@ -6,6 +6,15 @@ return {
   },
   ft = { 'java' },
   opts = function()
+    -- eclipse.jdt.ls >= 1.63 ships Eclipse/Equinox bundles that require JavaSE 25
+    -- to *run the language server*, which is independent of the JDK the project
+    -- targets. Point jdtls at its own JDK so the project toolchain stays as-is.
+    -- Override with JDTLS_JAVA_HOME if the JDK lives somewhere else.
+    local jdtls_java_home = vim.env.JDTLS_JAVA_HOME
+      or 'C:/Program Files/Eclipse Adoptium/jdk-25.0.5.8-hotspot'
+    if vim.fn.isdirectory(jdtls_java_home) == 0 then
+      jdtls_java_home = nil
+    end
     local cmd = { vim.fn.exepath 'jdtls' }
     local lombok_jar = vim.fn.expand '$MASON/share/jdtls/lombok.jar'
     table.insert(cmd, string.format('--jvm-arg=-javaagent:%s', lombok_jar))
@@ -30,6 +39,8 @@ return {
       -- How to run jdtls. This can be overridden to a full java command-line
       -- if the Python wrapper script doesn't suffice.
       cmd = cmd,
+      -- Only the jdtls process gets the Java 25 runtime, not the terminal.
+      cmd_env = { JAVA_HOME = jdtls_java_home },
       full_cmd = function(opts)
         local fname = vim.api.nvim_buf_get_name(0)
         local root_dir = opts.root_dir(fname)
@@ -80,6 +91,7 @@ return {
       -- Configuration can be augmented and overridden by opts.jdtls
       local config = {
         cmd = opts.full_cmd(opts),
+        cmd_env = opts.cmd_env,
         root_dir = opts.root_dir(fname),
         init_options = {
           bundles = bundles,
